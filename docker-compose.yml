@@ -1,0 +1,92 @@
+#version: '3'
+
+version: '2.3'
+
+services:
+
+  stock_forecast:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./logs:/usr/src/app/logs
+    ports:
+      - 8081:8080
+    depends_on:
+      - launcher
+    environment: &env
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+      PYTHONOPTIMIZE: 1
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_BROKER_TRANSPORT: "redis"
+      CELERY_BROKER_HOST: "redis"
+      CELERY_BROKER_PORT: 6379
+      CELERY_BROKER_VHOST: "0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+      CELERY_BROKER_CONNECTION_TIMEOUT: 10
+      CELERY_BROKER_CONNECTION_MAX_RETRIES: 0
+      MINIO_URL: minio:9000
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+      MODEL_BUCKET: models
+      GPU_NUMBER: 0
+    command: python -m swagger_server
+    restart: always
+
+  launcher:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./logs:/usr/src/app/logs
+    ports:
+      - 8080:8080
+    depends_on:
+      redis:
+        condition: service_started
+      minio:
+        condition: service_healthy
+      notebook:
+        condition: service_started
+
+    environment: *env
+    restart: always
+
+  minio:
+    image: minio/minio:latest
+    volumes:
+      - ./minio_data:/data
+    ports:
+      - 9000:9000
+    environment: *env
+    command: server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    restart: always
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379
+    volumes:
+      - ./redis_data:/data
+    restart: always
+
+  notebook:
+    container_name: python_notebook
+    labels:
+      description: Jupyter Notebook for Exploratory Data Analysis
+      name: jupyter notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ~/Documents/jupyter_notebooks:/usr/src/app/jupyter_notebooks
+    build: .
+
+volumes:
+  minio_data:
+  redis_data:

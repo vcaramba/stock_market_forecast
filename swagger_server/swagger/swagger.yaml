@@ -1,0 +1,61 @@
+---
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: "Stock Market Forecast App"
+host: "localhost:8082"
+basePath: "/"
+schemes:
+- "https"
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /get_timeseries:
+    get:
+      description: "Returns stock timeseries data for requested company"
+      operationId: "get_timeseries_data"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "interval"
+        in: "query"
+        description: "Time interval between two consecutive data points in the time\
+          \ series. The following values are supported: 1min, 5min, 15min, 30min,\
+          \ 60min"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/TimeseriesResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_timeseries"
+definitions:
+  TimeseriesResponse:
+    required:
+    - "message"
+    properties:
+      message:
+        type: "object"
+        properties: {}
+    example:
+      message: "{}"
+  ErrorResponse:
+    required:
+    - "message"
+    properties:
+      message:
+        type: "string"

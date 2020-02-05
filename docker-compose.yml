@@ -11,7 +11,7 @@ services:
     volumes:
       - ./logs:/usr/src/app/logs
     ports:
-      - 8081:8080
+      - 8082:8080
     depends_on:
       - launcher
     environment: &env
@@ -31,7 +31,7 @@ services:
       MINIO_SECRET_KEY: minio123
       MODEL_BUCKET: models
       GPU_NUMBER: 0
-    command: python -m swagger_server
+    command: /root/miniconda/bin/python -m swagger_server
     restart: always
 
   launcher:
@@ -85,6 +85,7 @@ services:
       - "8888:8888"
     volumes:
       - ~/Documents/jupyter_notebooks:/usr/src/app/jupyter_notebooks
+    command: /root/miniconda/bin/jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root
     build: .
 
 volumes:

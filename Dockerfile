@@ -1,18 +1,21 @@
-FROM continuumio/miniconda3:4.3.27
+FROM nvidia/cuda:10.0-runtime-ubuntu18.04
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY . /usr/src/app/
+COPY requirements.txt /usr/src/app/
 
-RUN apt-get update \
-    && apt-get clean \
-    && apt-get update -qqq \
-    && apt-get install -y -q g++ \
-    && conda install python=3.7.4 \
-    && pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && \
+    apt-get install -y wget gcc && \
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p ~/miniconda && \
+    chmod -R +x ~/miniconda/bin && \
+    ~/miniconda/bin/conda config --add channels conda-forge && \
+    ~/miniconda/bin/conda install python=3.7.4
 
-#EXPOSE 8080
+RUN ~/miniconda/bin/pip install --no-cache-dir -r requirements.txt
 
-CMD jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root
+COPY . /usr/src/app
+
+EXPOSE 8080

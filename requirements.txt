@@ -1,4 +1,4 @@
-connexion[swagger-ui]==2.2.0
+connexion[swagger-ui]==2.5.1
 Flask-Caching
 minio
 alpha-vantage

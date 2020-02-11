@@ -1,22 +1,39 @@
 ---
 swagger: "2.0"
 info:
+  description: "Wrapper around a neural network model trained to predict stock prices"
   version: "0.0.1"
-  title: "Stock Market Forecast App"
-host: "localhost:8082"
-basePath: "/"
+  title: "Stock price prediction service"
 schemes:
-- "https"
 - "http"
-consumes:
-- "application/json"
-produces:
-- "application/json"
 paths:
-  /get_timeseries:
+  /get_symbol:
     get:
-      description: "Returns stock timeseries data for requested company"
-      operationId: "get_timeseries_data"
+      description: "Returns suggested company symbol(s) based on search"
+      operationId: "get_symbol"
+      parameters:
+      - name: "keywords"
+        in: "query"
+        description: "The keywords"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Search completed successfully"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_symbol"
+  /get_intraday:
+    get:
+      description: "Returns intraday timeseries data for requested company"
+      operationId: "get_intraday"
       parameters:
       - name: "symbol"
         in: "query"
@@ -30,11 +47,16 @@ paths:
           \ 60min"
         required: true
         type: "string"
+      - name: "outputsize"
+        in: "query"
+        description: "The outputsize. Supported values: compact, full"
+        required: true
+        type: "string"
       responses:
         "200":
           description: "Successfully retrieved timeseries data"
           schema:
-            $ref: "#/definitions/TimeseriesResponse"
+            $ref: "#/definitions/AlphaVantageResponse"
         "405":
           description: "Invalid input"
         default:
@@ -42,9 +64,522 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
-    x-swagger-router-controller: "get_timeseries"
+    x-swagger-router-controller: "get_intraday"
+  /get_daily:
+    get:
+      description: "Returns daily timeseries data for requested company"
+      operationId: "get_daily"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "outputsize"
+        in: "query"
+        description: "The outputsize. Supported values: compact, full"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_daily"
+  /get_daily_adjusted:
+    get:
+      description: "Returns adjusted daily timeseries data for requested company"
+      operationId: "get_daily_adjusted"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "outputsize"
+        in: "query"
+        description: "The outputsize. Supported values: compact, full"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_daily_adjusted"
+  /get_weekly:
+    get:
+      description: "Returns weekly timeseries data for requested company"
+      operationId: "get_weekly"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_weekly"
+  /get_weekly_adjusted:
+    get:
+      description: "Returns adjusted weekly timeseries data for requested company"
+      operationId: "get_weekly_adjusted"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_weekly_adjusted"
+  /get_monthly:
+    get:
+      description: "Returns monthly timeseries data for requested company"
+      operationId: "get_monthly"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_monthly"
+  /get_monthly_adjusted:
+    get:
+      description: "Returns adjusted monthly timeseries data for requested company"
+      operationId: "get_monthly_adjusted"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_monhtly_adjusted"
+  /get_quote_endpoint:
+    get:
+      description: "Returns the latest price and volume information data for requested\
+        \ company"
+      operationId: "get_quote_endpoint"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_quote_endpoint"
+  /get_aroon:
+    get:
+      description: "Returns AROON indicator values for requested company"
+      operationId: "get_aroon"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "interval"
+        in: "query"
+        description: "Time interval between two consecutive data points in the time\
+          \ series. The following values are supported: 1min, 5min, 15min, 30min,\
+          \ 60min, daily, weekly, monthly"
+        required: true
+        type: "string"
+      - name: "time_period"
+        in: "query"
+        description: "Number of data points used to calculate each AROON value. Positive\
+          \ integers are accepted (e.g., time_period=60, time_period=200)"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_aroon"
+  /get_bbands:
+    get:
+      description: "Returns BBANDS indicator values for requested company"
+      operationId: "get_bbands"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "interval"
+        in: "query"
+        description: "Time interval between two consecutive data points in the time\
+          \ series. The following values are supported: 1min, 5min, 15min, 30min,\
+          \ 60min, daily, weekly, monthly"
+        required: true
+        type: "string"
+      - name: "time_period"
+        in: "query"
+        description: "Number of data points used to calculate each BBANDS value. Positive\
+          \ integers are accepted (e.g., time_period=60, time_period=200)"
+        required: true
+        type: "integer"
+      - name: "series_type"
+        in: "query"
+        description: "The desired price type in the time series. Four types are supported:\
+          \ close, open, high, low"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_bbands"
+  /get_cci:
+    get:
+      description: "Returns the commodity channel index (CCI) values for requested\
+        \ company"
+      operationId: "get_cci"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "interval"
+        in: "query"
+        description: "Time interval between two consecutive data points in the time\
+          \ series. The following values are supported: 1min, 5min, 15min, 30min,\
+          \ 60min, daily, weekly, monthly"
+        required: true
+        type: "string"
+      - name: "time_period"
+        in: "query"
+        description: "Number of data points used to calculate each CCI value. Positive\
+          \ integers are accepted (e.g., time_period=60, time_period=200)"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_cci"
+  /get_adx:
+    get:
+      description: "Returns the average directional movement index (ADX) values for\
+        \ requested company"
+      operationId: "get_adx"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "interval"
+        in: "query"
+        description: "Time interval between two consecutive data points in the time\
+          \ series. The following values are supported: 1min, 5min, 15min, 30min,\
+          \ 60min, daily, weekly, monthly"
+        required: true
+        type: "string"
+      - name: "time_period"
+        in: "query"
+        description: "Number of data points used to calculate each ADX value. Positive\
+          \ integers are accepted (e.g., time_period=60, time_period=200)"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_adx"
+  /get_obv:
+    get:
+      description: "Returns the on balance volume (OBV) values for requested company"
+      operationId: "get_obv"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "The symbol of company"
+        required: true
+        type: "string"
+      - name: "interval"
+        in: "query"
+        description: "Time interval between two consecutive data points in the time\
+          \ series. The following values are supported: 1min, 5min, 15min, 30min,\
+          \ 60min, daily, weekly, monthly"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully retrieved timeseries data"
+          schema:
+            $ref: "#/definitions/AlphaVantageResponse"
+        "405":
+          description: "Invalid input"
+        default:
+          description: "Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "get_obv"
+  /predict:
+    post:
+      summary: "Predict value"
+      description: ""
+      operationId: "predict"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "data_to_predict"
+        description: "List of texts to perform prediction on"
+        required: true
+        schema:
+          $ref: "#/definitions/data_to_predict"
+      responses:
+        "200":
+          description: "Successful prediction"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/PredictResponse"
+        "405":
+          description: "Invalid input"
+        "500":
+          description: "Predicting error"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "predict"
+  /train:
+    post:
+      summary: "Trains a new model"
+      operationId: "train_post"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "trainData"
+        description: "Neural network training parameters and training data description"
+        required: true
+        schema:
+          $ref: "#/definitions/trainData"
+      responses:
+        "200":
+          description: "Successfully started training"
+          schema:
+            $ref: "#/definitions/train_started_success"
+        "405":
+          description: "Invalid input"
+        "500":
+          description: "Training error"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "train"
+  /delete:
+    delete:
+      summary: "Deletes a model from storage"
+      operationId: "delete_delete"
+      parameters:
+      - name: "modelId"
+        in: "query"
+        description: "id of the model to delete"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Model was successfully deleted id={modelId}"
+        "299":
+          description: "Successfully cancelled training id={modelId}"
+        "405":
+          description: "Invalid input"
+        "500":
+          description: "Deletion error, id={modelId}"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "delete"
+  /list_models:
+    get:
+      summary: "Reruns list of models from model storage"
+      operationId: "list_models_get"
+      parameters: []
+      responses:
+        "200":
+          description: "List of models"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/modelInfo"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    x-swagger-router-controller: "list_models"
 definitions:
-  TimeseriesResponse:
+  PredictResponse:
+    type: "object"
+    properties:
+      row_id:
+        type: "integer"
+        format: "int64"
+      indicator:
+        type: "number"
+    example:
+      indicator: 6.027456183070403
+      row_id: 0
+  data_to_predict:
+    type: "object"
+    properties:
+      model_id:
+        type: "string"
+      datasetId:
+        type: "integer"
+        example: 2
+  trainData:
+    properties:
+      modelId:
+        type: "string"
+      modelName:
+        type: "string"
+        example: "my model"
+      comment:
+        type: "string"
+        example: "comment"
+      createdAt:
+        type: "string"
+        example: "2020-02-02T02:02:02"
+      datasetId:
+        type: "integer"
+        example: 2
+  modelInfo:
+    properties:
+      modelId:
+        type: "string"
+        example: "abcd-f"
+      modelName:
+        type: "string"
+        example: "my model"
+      comment:
+        type: "string"
+        example: "test comment"
+      datasetId:
+        type: "integer"
+        example: 22
+      status:
+        type: "string"
+        example: "trained"
+      trainingTime:
+        type: "integer"
+        example: 222
+      createdAt:
+        type: "string"
+        example: "2020-02-02T02:02:02"
+    example:
+      modelName: "my model"
+      createdAt: "2020-02-02T02:02:02"
+      trainingTime: 222
+      modelId: "abcd-f"
+      datasetId: 22
+      comment: "test comment"
+      status: "trained"
+  train_started_success:
+    type: "string"
+    example: "Successfully started training"
+  AlphaVantageResponse:
     required:
     - "message"
     properties:

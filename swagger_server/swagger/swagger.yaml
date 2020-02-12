@@ -28,7 +28,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_symbol"
   /get_intraday:
     get:
@@ -63,7 +63,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_intraday"
   /get_daily:
     get:
@@ -91,7 +91,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_daily"
   /get_daily_adjusted:
     get:
@@ -119,7 +119,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_daily_adjusted"
   /get_weekly:
     get:
@@ -142,7 +142,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_weekly"
   /get_weekly_adjusted:
     get:
@@ -165,7 +165,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_weekly_adjusted"
   /get_monthly:
     get:
@@ -188,7 +188,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_monthly"
   /get_monthly_adjusted:
     get:
@@ -211,7 +211,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_monhtly_adjusted"
   /get_quote_endpoint:
     get:
@@ -235,7 +235,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.timeseries_controller"
     x-swagger-router-controller: "get_quote_endpoint"
   /get_aroon:
     get:
@@ -271,7 +271,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.indicators_controller"
     x-swagger-router-controller: "get_aroon"
   /get_bbands:
     get:
@@ -313,7 +313,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.indicators_controller"
     x-swagger-router-controller: "get_bbands"
   /get_cci:
     get:
@@ -350,7 +350,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.indicators_controller"
     x-swagger-router-controller: "get_cci"
   /get_adx:
     get:
@@ -387,7 +387,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.indicators_controller"
     x-swagger-router-controller: "get_adx"
   /get_obv:
     get:
@@ -417,7 +417,7 @@ paths:
           description: "Error"
           schema:
             $ref: "#/definitions/ErrorResponse"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.indicators_controller"
     x-swagger-router-controller: "get_obv"
   /predict:
     post:
@@ -446,8 +446,7 @@ paths:
           description: "Invalid input"
         "500":
           description: "Predicting error"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
-    x-swagger-router-controller: "predict"
+      x-swagger-router-controller: "swagger_server.controllers.predict_controller"
   /train:
     post:
       summary: "Trains a new model"
@@ -472,8 +471,7 @@ paths:
           description: "Invalid input"
         "500":
           description: "Training error"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
-    x-swagger-router-controller: "train"
+      x-swagger-router-controller: "swagger_server.controllers.train_controller"
   /delete:
     delete:
       summary: "Deletes a model from storage"
@@ -493,8 +491,7 @@ paths:
           description: "Invalid input"
         "500":
           description: "Deletion error, id={modelId}"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
-    x-swagger-router-controller: "delete"
+      x-swagger-router-controller: "swagger_server.controllers.delete_controller"
   /list_models:
     get:
       summary: "Reruns list of models from model storage"
@@ -507,7 +504,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/modelInfo"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+      x-swagger-router-controller: "swagger_server.controllers.list_models_controller"
     x-swagger-router-controller: "list_models"
 definitions:
   PredictResponse:

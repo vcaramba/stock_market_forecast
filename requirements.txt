@@ -11,3 +11,4 @@ seaborn
 scikit-plot
 imblearn
 Keras
+redis
